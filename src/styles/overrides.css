@@ -1,0 +1,536 @@
+/*
+ * Hand-written adjustments on top of the ported component styles:
+ * Cool-neutral fixes, floating panel surfaces, and the two ReactBits
+ * components whose default skin is dark by design.
+ */
+
+/* Floating panels inherit the glass surface tokens instead of raw utility colours. */
+.float-panel {
+  background: var(--float-panel-bg);
+  border-color: var(--glass-border);
+  visibility: visible;
+  -webkit-backdrop-filter: blur(40px) saturate(160%);
+  backdrop-filter: blur(40px) saturate(160%);
+}
+
+/*
+ * An opacity-only "closed" state leaves a composited backdrop-filter tile
+ * ghosting on the page in Chromium, so closed panels are also hidden from
+ * paint and from the accessibility tree.
+ */
+.float-panel-closed {
+  visibility: hidden;
+}
+
+/*
+ * Contrast pass: #66ccff is a light accent, so small accent text (labels and
+ * numerals) uses the same hue at a darker tone to clear WCAG AA on the light
+ * surfaces. Fills, borders, dots and icons keep the pure #66ccff brand tone.
+ */
+.map-hero > p,
+.map-counts strong,
+.category-list strong,
+.series-category:hover,
+.calendar-holiday strong,
+.footer-quote-icon,
+.footer-powered a:hover {
+  color: var(--primary-ink);
+}
+
+.dark .map-hero > p,
+.dark .map-counts strong,
+.dark .category-list strong,
+.dark .calendar-holiday strong,
+.dark .footer-quote-icon {
+  color: var(--primary);
+}
+
+/* Avatar speech bubble: visible state is driven by React, cool surface. */
+.avatar-bubble {
+  background: color-mix(in srgb, var(--cream-base) 88%, transparent);
+  color: color-mix(in srgb, var(--primary-ink) 82%, var(--text-strong));
+  border-color: color-mix(in srgb, var(--primary) 26%, white);
+}
+
+.avatar-bubble.is-visible {
+  opacity: 1;
+  transform: translateY(0) rotate(2deg) scale(1);
+}
+
+/* Post cards keep their own glass surface; the cover column is fixed at 30%. */
+.post-card {
+  --coverWidth: 30%;
+}
+
+/* ReactBits SpotlightCard ships dark by default. Re-skin it to the glass system. */
+.card-spotlight.post-card {
+  padding: 0;
+  border-radius: var(--radius-large);
+  border-color: color-mix(in srgb, var(--primary) 12%, var(--glass-border));
+  background-color: transparent;
+  background-image: linear-gradient(138deg, rgb(255 255 255 / 0.36), transparent 42%);
+}
+
+.dark .card-spotlight.post-card {
+  background-image: linear-gradient(138deg, rgb(255 255 255 / 0.06), transparent 42%);
+}
+
+.card-spotlight.post-card::before {
+  border-radius: inherit;
+}
+
+/* Small link used under the hero quote. */
+.hero-scroll-link {
+  border-bottom: 1px dashed color-mix(in srgb, var(--primary) 55%, transparent);
+}
+
+/*
+ * Article typography contrast. The reference paints body copy at ~72% alpha,
+ * which lands around 3.4:1 on this lighter background; body text and links are
+ * raised to full-strength tokens so the reading surface clears WCAG AA.
+ */
+.markdown-content.custom-md p,
+.markdown-content.custom-md li,
+.markdown-content.custom-md blockquote p,
+.prose p,
+.prose li {
+  color: var(--text-body);
+}
+
+.markdown-content.custom-md blockquote p {
+  color: var(--text-strong);
+}
+
+.markdown-content.custom-md a,
+.prose a,
+.article-description a {
+  color: var(--primary-ink);
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  text-underline-offset: 0.25em;
+}
+
+.markdown-content.custom-md a:hover,
+.prose a:hover {
+  color: var(--primary-ink);
+  opacity: 0.85;
+}
+
+/* Article headings keep a tight scroll offset for the sticky nav. */
+.markdown-content.custom-md > h2 {
+  scroll-margin-top: 6rem;
+}
+
+/*
+ * About page copy: the reference sets these at 36-56% alpha, which drops to
+ * roughly 2:1 here. Body copy and captions are raised to full-strength tokens.
+ */
+.about-lead,
+.interest-row p,
+.english-drawer p {
+  color: var(--text-body);
+}
+
+.interest-row p {
+  font-size: 0.84rem;
+  line-height: 1.65;
+}
+
+.about-section-title p,
+.about-note > p,
+.english-drawer summary small {
+  color: var(--primary-ink);
+}
+
+.interest-row small {
+  color: var(--primary-ink);
+  opacity: 1;
+}
+
+.about-eyebrow,
+.bangumi-eyebrow,
+.cabinet-eyebrow,
+.dev-eyebrow {
+  color: var(--primary-ink);
+}
+
+.about-hero h1 em {
+  color: var(--primary-ink);
+}
+
+/* Stats page: the reference renders its chart client-side, so the column
+   wrapper and the inline metric bars are defined here. */
+.stats-chart-column {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  height: 100%;
+}
+
+.stats-chart-column small {
+  color: var(--text-muted);
+  font-size: 0.6rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.stats-metric-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: var(--primary);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--primary) 14%, transparent);
+}
+
+.stats-metric-name {
+  overflow: hidden;
+  color: var(--text-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stats-metric-value {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-ink);
+  font-size: 0.74rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.stats-metric-bar {
+  display: block;
+  height: 0.32rem;
+  min-width: 0.32rem;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--primary) 55%, var(--tea)),
+    var(--primary)
+  );
+}
+
+.stats-sync-status {
+  color: var(--primary-ink);
+}
+
+.stats-chart-footer,
+.stats-running-copy,
+.stats-note-bottom {
+  color: var(--text-body);
+}
+
+/* The note list labels ship as <small> in markup but only <span> is styled. */
+.stats-content-list small {
+  color: var(--text-body);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+/* Dev page: the reference labels sit at 40% tea, around 2.5:1 on the card. */
+.tech-item small,
+.project-number,
+.contribution-status,
+.dev-footer-note {
+  color: var(--text-body);
+}
+
+.tech-item small {
+  font-size: 0.56rem;
+}
+
+.project-number {
+  color: var(--primary-ink);
+  font-size: 0.56rem;
+}
+
+/* Contribution heat map: the reference borrows GitHub's green scale. Re-keyed
+   to the site accent so the page keeps a single colour family. */
+.contribution-legend i[data-level="1"],
+.contribution-cell[data-level="1"] {
+  background: color-mix(in srgb, var(--primary) 34%, var(--cream-base));
+}
+
+.contribution-legend i[data-level="2"],
+.contribution-cell[data-level="2"] {
+  background: color-mix(in srgb, var(--primary) 58%, var(--cream-base));
+}
+
+.contribution-legend i[data-level="3"],
+.contribution-cell[data-level="3"] {
+  background: color-mix(in srgb, var(--primary) 76%, var(--tea));
+}
+
+.contribution-legend i[data-level="4"],
+.contribution-cell[data-level="4"] {
+  background: var(--primary-ink);
+}
+
+.dark .contribution-legend i[data-level="1"],
+.dark .contribution-cell[data-level="1"] {
+  background: color-mix(in srgb, var(--primary) 26%, var(--cream-soft));
+}
+
+.dark .contribution-legend i[data-level="2"],
+.dark .contribution-cell[data-level="2"] {
+  background: color-mix(in srgb, var(--primary) 45%, var(--cream-soft));
+}
+
+.dark .contribution-legend i[data-level="3"],
+.dark .contribution-cell[data-level="3"] {
+  background: color-mix(in srgb, var(--primary) 66%, var(--cream-soft));
+}
+
+.dark .contribution-legend i[data-level="4"],
+.dark .contribution-cell[data-level="4"] {
+  background: var(--primary);
+}
+
+/* Collection shelf captions sit at 38% alpha in the reference theme. */
+.collection-shelf-header p,
+.collection-card-note,
+.collection-card-tags span,
+.collection-next p {
+  color: var(--text-body);
+  opacity: 1;
+}
+
+/* Studios page: logos are replaced by typographic monograms, and work covers
+   fall back to a title card because there is no licensed key art here. */
+.studio-logo {
+  display: grid;
+  place-items: center;
+  width: 4.4rem;
+  height: 4.4rem;
+  border: 1px dashed color-mix(in srgb, var(--studio-accent, var(--primary)) 45%, transparent);
+  border-radius: 1.1rem;
+  background: color-mix(in srgb, var(--studio-accent, var(--primary)) 12%, var(--glass-card));
+  color: color-mix(in srgb, var(--studio-accent, var(--primary-ink)) 72%, #10222e);
+}
+
+.studio-monogram {
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+
+.work-cover {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--studio-accent, var(--primary)) 22%, transparent);
+  border-radius: 0.9rem;
+  background: linear-gradient(
+    150deg,
+    color-mix(in srgb, var(--studio-accent, var(--primary)) 16%, var(--card-bg)),
+    var(--card-bg)
+  );
+  padding: 0.6rem;
+}
+
+.work-cover-fallback {
+  color: var(--text-strong);
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.35;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.work-info strong {
+  color: var(--text-strong);
+}
+
+.work-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  color: var(--primary-ink);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.studio-story p,
+.studio-impression,
+.watched-note small,
+.studios-lead {
+  color: var(--text-body);
+}
+
+/* Travel page: visited provinces and city markers on the projected map. */
+.province-shape.is-visited {
+  fill: color-mix(in srgb, var(--primary) 26%, var(--cream-base));
+  stroke: color-mix(in srgb, var(--primary) 58%, var(--tea));
+  stroke-width: 1.3;
+}
+
+.province-shape.is-visited:hover {
+  fill: color-mix(in srgb, var(--primary) 38%, var(--cream-base));
+}
+
+.map-marker-layer {
+  pointer-events: none;
+}
+
+.map-marker-ripple {
+  fill: color-mix(in srgb, var(--primary) 26%, transparent);
+  stroke: color-mix(in srgb, var(--primary) 55%, transparent);
+  stroke-width: 1;
+}
+
+.map-marker-dot {
+  fill: var(--primary-ink);
+  stroke: var(--cream-base);
+  stroke-width: 1.2;
+}
+
+.map-marker.is-home .map-marker-dot {
+  fill: #e978a6;
+}
+
+.map-marker.is-home .map-marker-ripple {
+  fill: color-mix(in srgb, #e978a6 24%, transparent);
+  stroke: color-mix(in srgb, #e978a6 52%, transparent);
+}
+
+.map-marker-label {
+  fill: var(--text-strong);
+  font-size: 15px;
+  font-weight: 800;
+  paint-order: stroke;
+  stroke: color-mix(in srgb, var(--cream-base) 92%, transparent);
+  stroke-width: 3.4px;
+  stroke-linejoin: round;
+}
+
+.dark .province-shape.is-visited {
+  fill: color-mix(in srgb, var(--primary) 30%, var(--cream-soft));
+}
+
+.dark .map-marker-label {
+  fill: var(--text-strong);
+  stroke: color-mix(in srgb, var(--cream-base) 88%, transparent);
+}
+
+.travel-eyebrow,
+.travel-count-pill strong,
+.travel-place-index,
+.travel-map-caption {
+  color: var(--primary-ink);
+}
+
+.travel-summary,
+.travel-place-item small,
+.travel-place-note,
+.travel-wishlist-note,
+.travel-journal p,
+.travel-footer-note {
+  color: var(--text-body);
+}
+
+.travel-place-item {
+  display: grid;
+  grid-template-columns: 2.2rem minmax(0, 1fr);
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid transparent;
+  border-radius: 0.9rem;
+  text-align: left;
+  transition: background-color 0.18s ease, border-color 0.18s ease;
+}
+
+.travel-place-item:hover {
+  border-color: color-mix(in srgb, var(--primary) 18%, transparent);
+  background: color-mix(in srgb, var(--primary) 6%, transparent);
+}
+
+.travel-place-item.is-home {
+  border-color: color-mix(in srgb, var(--primary) 26%, transparent);
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+}
+
+.travel-place-item strong {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--text-strong);
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.travel-place-item small {
+  font-size: 0.72rem;
+}
+
+.travel-place-note {
+  grid-column: 2;
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+/* Pagination shell used by the home post list. */
+.pagination-shell {
+  border: 1px solid color-mix(in srgb, var(--primary) 14%, var(--glass-border));
+  background: color-mix(in srgb, var(--glass-card) 82%, transparent);
+  box-shadow: inset 0 1px rgb(255 255 255 / 0.5);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.dark .pagination-shell {
+  box-shadow: inset 0 1px rgb(255 255 255 / 0.06);
+}
+
+.search-result-snippet {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.search-result-snippet mark {
+  background: color-mix(in srgb, var(--primary) 24%, transparent);
+  color: var(--primary-ink);
+  border-radius: 0.25rem;
+  padding: 0 0.15rem;
+}
+
+/* Search results scroll area keeps the panel's rounded corners. */
+.search-panel {
+  border-radius: 1rem;
+}
+
+/* Timeline entries reuse the series list, but the left column holds a date. */
+.series-category {
+  min-height: 2.2rem;
+}
+
+/* Cover images fade into the card on hover. */
+.post-card img {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (max-width: 767px) {
+  .post-card {
+    --coverWidth: 100%;
+  }
+
+  .hero-title {
+    white-space: normal;
+  }
+}

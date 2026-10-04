@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN" class="navbar-loading" data-palette="azusa">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="通过系列、分类与标签浏览所有文章"
+    />
+    <meta name="author" content="Ling Xiao" />
+    <title>文章地图 - Ling&#39;s Notes</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      // 参考站的做法：首屏由 navbar-loading 把导航栏藏起来，脚本再放它淡入；
+      // 刷新时跳过入场动画，避免整页元素重新播一遍。
+      (() => {
+        const entry = performance.getEntriesByType("navigation")[0];
+        window.__isPageReload = entry?.type === "reload";
+      })();
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

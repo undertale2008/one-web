@@ -1,0 +1,179 @@
+@import "tailwindcss";
+@import "./legacy.css";
+@import "./overrides.css";
+
+/*
+ * Design read: personal blog index (文章地图) for readers, with a soft
+ * glass + 手账 (journal) language, leaning toward the reference site's
+ * Fuwari-derived glass system, re-keyed to a cool #66ccff accent.
+ *
+ * Dials (mirrored from the reference, redesign - preserve):
+ *   DESIGN_VARIANCE 6 / MOTION_INTENSITY 5 / VISUAL_DENSITY 4
+ */
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@source "../**/*.{ts,tsx}";
+
+:root {
+  --hue: 200;
+
+  /* Brand accent: the requested #66ccff, locked across the whole site. */
+  --brand: #66ccff;
+  --primary: var(--brand);
+  /* Same hue, darker, for accent text that must clear WCAG AA on light surfaces. */
+  /* Deep tone of the same hue: 6.6:1 on the light base, so small accent
+     text (labels, numerals) clears WCAG AA where pure #66ccff cannot. */
+  --primary-ink: #145f86;
+  --primary-soft: color-mix(in srgb, var(--brand) 42%, white);
+
+  --cream-base: #f2f9ff;
+  --cream-soft: #e8f4fd;
+  --tea: #3d5464;
+  --mio-purple: #7f7fb5;
+  --azusa-blue: #668eae;
+
+  --text-strong: #263845;
+  --text-body: #47606f;
+  --text-muted: #74899a;
+
+  --glass-card: rgba(255, 255, 255, 0.62);
+  --glass-panel: rgba(244, 250, 255, 0.78);
+  --glass-border: rgba(44, 106, 148, 0.14);
+
+  --page-bg: var(--cream-base);
+  --card-bg: var(--cream-soft);
+  --btn-content: var(--tea);
+  --btn-regular-bg: #e2f0fb;
+  --btn-regular-bg-hover: #d2e8f9;
+  --btn-regular-bg-active: #bfdcf3;
+  --btn-plain-bg-hover: oklch(0.95 0.028 var(--hue));
+  --btn-plain-bg-active: oklch(0.98 0.012 var(--hue));
+  --btn-card-bg-hover: oklch(0.98 0.006 var(--hue));
+  --btn-card-bg-active: oklch(0.9 0.032 var(--hue));
+  --deep-text: var(--tea);
+  --title-active: oklch(0.6 0.1 var(--hue));
+  --line-divider: rgba(0, 0, 0, 0.08);
+  --line-color: rgba(0, 0, 0, 0.1);
+  --meta-divider: rgba(0, 0, 0, 0.2);
+  --inline-code-bg: var(--btn-regular-bg);
+  --inline-code-color: var(--btn-content);
+  --selection-bg: #cbe8ff;
+  --link-underline: oklch(0.93 0.04 var(--hue));
+  --link-hover: oklch(0.95 0.025 var(--hue));
+  --link-active: oklch(0.9 0.05 var(--hue));
+  --float-panel-bg: var(--glass-panel);
+  --toc-badge-bg: oklch(0.89 0.05 var(--hue));
+  --toc-item-active: oklch(0.7 0.13 var(--hue));
+
+  --radius-large: 1rem;
+  --content-delay: 0.15s;
+  --page-width: 75rem;
+  --toc-width: calc((100vw - var(--page-width)) / 2 - 1rem);
+
+  /*
+   * Tailwind v3 compat values (--tw-shadow, --tw-backdrop-*, --tw-translate-* …)
+   * are NOT declared here on purpose: they live inside Tailwind v4's cascade
+   * layers, and an unlayered default would beat every `shadow-*` utility.
+   * The ported stylesheet carries its own inline fallbacks instead.
+   */
+  /* Referenced by the sticker and note animations in the ported styles. */
+  --text-color: var(--text-body);
+  --note-drift-x: 0px;
+  --note-drift-y: 0px;
+  --note-rotate-start: -4deg;
+  --note-rotate-end: 3deg;
+}
+
+:root.dark {
+  --primary: color-mix(in srgb, var(--brand) 78%, white);
+  --primary-ink: color-mix(in srgb, var(--brand) 88%, white);
+  --primary-soft: color-mix(in srgb, var(--brand) 42%, transparent);
+
+  --cream-base: #0d151c;
+  --cream-soft: #141f28;
+  --tea: #cfe2ef;
+
+  --text-strong: #e9f3fa;
+  --text-body: #c2d4e1;
+  --text-muted: #90a5b4;
+
+  --glass-card: rgba(19, 29, 38, 0.72);
+  --glass-panel: rgba(15, 23, 31, 0.82);
+  --glass-border: rgba(143, 216, 255, 0.14);
+
+  --card-bg: var(--cream-soft);
+  --btn-content: var(--primary);
+  --btn-regular-bg: #1b2b38;
+  --btn-regular-bg-hover: #23384a;
+  --btn-regular-bg-active: #2b465c;
+  --btn-plain-bg-hover: oklch(0.3 0.035 var(--hue));
+  --btn-plain-bg-active: oklch(0.27 0.025 var(--hue));
+  --deep-text: var(--text-strong);
+  --line-divider: rgba(255, 255, 255, 0.08);
+  --line-color: rgba(255, 255, 255, 0.1);
+  --meta-divider: rgba(255, 255, 255, 0.2);
+  --selection-bg: #2c5a78;
+  --link-underline: oklch(0.4 0.08 var(--hue));
+  --link-hover: oklch(0.4 0.08 var(--hue));
+  --link-active: oklch(0.35 0.07 var(--hue));
+  --toc-item-active: oklch(0.35 0.07 var(--hue));
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-ink: var(--primary-ink);
+  --color-strong: var(--text-strong);
+  --color-body: var(--text-body);
+  --color-muted: var(--text-muted);
+  --font-sans: "Roboto", "Noto Sans SC", "PingFang SC", "Microsoft YaHei",
+    ui-sans-serif, system-ui, sans-serif;
+  --font-serif: Georgia, "Noto Serif SC", "Songti SC", serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* 首屏导航栏先藏起来，挂载后由脚本移除这个类淡入（参考站同款做法）。 */
+  html.navbar-loading #top-row {
+    opacity: 0 !important;
+    transform: translateY(-0.5rem) !important;
+    pointer-events: none !important;
+  }
+
+  body {
+    min-height: 100vh;
+    background: var(--page-bg);
+    color: var(--text-body);
+    font-family: var(--font-sans);
+    transition:
+      background-color 0.35s ease,
+      color 0.35s ease;
+  }
+
+  ::selection {
+    background: var(--selection-bg);
+    color: var(--text-strong);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
